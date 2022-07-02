@@ -40,12 +40,14 @@ npm run build
 ```
 
 ### Run Unit Tests with [Vitest](https://vitest.dev/)
+# Probably delete layter
 
 ```sh
 npm run test:unit
 ```
 
 ### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
+# probably delete later
 
 ```sh
 npm run build
