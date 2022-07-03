@@ -15,7 +15,4 @@ module.exports = {
       extends: ["plugin:cypress/recommended"],
     },
   ],
-  rules: {
-    "no-invalid-this": "error",
-  }
 };

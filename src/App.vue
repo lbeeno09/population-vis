@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
+// import StartPage from "@/components/StartPage.vue";
+// import GraphVis from "@/components/GraphVis.vue";
+import { RouterView } from "vue-router";
 </script>
 
 <template>
-  <!-- <RouterLink to="/">Home</RouterLink> -->
-
   <RouterView />
 </template>
 
 <script lang="ts">
+document.body.style.backgroundColor = "gray";
 </script>
 
 <style>

@@ -1,16 +1,32 @@
 import { defineStore } from "pinia";
 
-export const useCounterStore = defineStore({
-  id: "counter",
+export const usePrefecturesStore = defineStore({
+  id: "prefs",
   state: () => ({
-    counter: 0,
+    /* @type {{ prefecture: Prefecture, isSelected: boolean }[]} */
+    prefs: [],
+    /* @type {"all" | "selected" | "unselected"} */
+    filter: "all",
   }),
+
   getters: {
-    doubleCount: (state) => state.counter * 2,
+    selectedPrefs() {
+      return this.prefs.filter((pref) => pref.isSelected);
+    },
   },
+
   actions: {
-    increment() {
-      this.counter++;
+    addPref(pref) {
+      this.prefs.push({
+        prefecture: { prefCode: pref.prefCode, prefName: pref.prefName },
+        isSelected: false,
+      });
+    },
+    selectPref(pref) {
+      this.prefs.find((p) => p.prefecture === pref).isSelected = true;
+    },
+    deselectPref(pref) {
+      this.prefs.find((p) => p.prefecture === pref).isSelected = false;
     },
   },
 });
