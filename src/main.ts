@@ -12,3 +12,5 @@ app.use(router);
 app.use(HighchartsVue);
 
 app.mount("#app");
+
+// TODO: make Pinia work to store prefectures information

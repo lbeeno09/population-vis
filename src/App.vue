@@ -5,19 +5,22 @@ import { RouterView } from "vue-router";
 </script>
 
 <template>
-  <RouterView />
+    <RouterView />
 </template>
 
 <script lang="ts">
-document.body.style.backgroundColor = "gray";
 </script>
 
 <style>
+body {
+  background-color: #FAFAFA;
+}
+
 @import "@/assets/base.css";
 
 #app {
   max-width: 1280px;
-  margin: 0 auto;
+  margin: auto;
   padding: 2rem;
 
   font-weight: normal;
@@ -73,14 +76,15 @@ nav a:first-of-type {
 
 @media (min-width: 1024px) {
   body {
-    display: flex;
+    /* display: flex; */
     place-items: center;
   }
 
   #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* display: grid; */
+    /* grid-template-columns: 1fr 1fr; */
     padding: 0 2rem;
+    margin: auto;
   }
 
   header {
@@ -96,7 +100,7 @@ nav a:first-of-type {
   }
 
   .logo {
-    margin: 0 2rem 0 0;
+    /* margin: 0 2rem 0 0; */
   }
 
   nav {
