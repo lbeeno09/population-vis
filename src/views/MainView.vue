@@ -1,45 +1,55 @@
 <script setup lang="ts">
+import { defineComponent } from "vue";
+import { Prefecture } from "@/Types.ts";
 import StartPage from "@/components/StartPage.vue";
 import PrefectureSelector from "@/components/PrefectureSelector.vue";
 import GraphVis from "@/components/GraphVis.vue";
 </script>
 
 <template>
-  <!-- TODO: switch isSplashScreen when button is pressed -->
-  <!-- NOTE: $emit() -->
-  <div id="startPage" v-show="isSplashScreen">
-    <Child @stateName="isSplashScreen = $event">
-      <StartPage />
-    </Child>
+  <div id="startPage" v-if="isSplashScreen(screenName)">
+    <StartPage @nextPage="toNextPage" />
   </div>
   <br/>
-  <Transition name="fade">
-    <!-- TODO: Switch component depending on button pressed (prefectureSelect is hidden at fist) -->
-    <div id="mainPage" v-show="!isSplashScreen" v-cloak>
+  <!-- <Transition name="fade"> -->
+    <div id="mainPage" v-if="!isSplashScreen(screenName)" v-cloak>
       <div id="prefectureSelect">
-        <PrefectureSelector />
+        <PrefectureSelector @selectedPrefecture="storeTickedPrefecture" />
       </div>
       <!-- TODO: Some better spacing -->
       <br /> 
       <div id="graphDisplay">
-        <GraphVis />
+        <GraphVis :selectedPrefecture="tickedPrefecture" />
       </div>
     </div>
-  </Transition>
+  <!-- </Transition> -->
 </template>
 
 <script lang="ts">
-import Child from "@/components/StartPage.vue";
-export default {
+export default defineComponent({
   data() {
     return {
-      isSplashScreen: "splashPage",
+      screenName: "firstPage" as string,
+      tickedPrefecture: {} as Prefecture
     };
   },
-  components: {
-    Child,
+  methods: {
+    isSplashScreen(name: string) {
+      return name === "firstPage";
+    },
+    toNextPage(page: string) {
+      this.screenName = page;
+    },
+    storeTickedPrefecture(p: Prefecture) {
+      this.tickedPrefecture = p;
+    }
   },
-};
+  components: {
+    StartPage,
+    PrefectureSelector,
+    GraphVis
+  },
+});
 </script>
 
 <style>

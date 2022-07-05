@@ -1,6 +1,4 @@
 <script setup lang="ts">
-// import StartPage from "@/components/StartPage.vue";
-// import GraphVis from "@/components/GraphVis.vue";
 import { RouterView } from "vue-router";
 </script>
 
@@ -11,7 +9,7 @@ import { RouterView } from "vue-router";
 <script lang="ts">
 </script>
 
-<style>
+<style scope>
 body {
   background-color: #FAFAFA;
 }
@@ -97,10 +95,6 @@ nav a:first-of-type {
     display: flex;
     place-items: flex-start;
     flex-wrap: wrap;
-  }
-
-  .logo {
-    /* margin: 0 2rem 0 0; */
   }
 
   nav {

@@ -1,55 +1,52 @@
 <script setup lang="ts">
-import { Chart } from "highcharts-vue";
-import Highcharts from "highcharts";
-
-// import { RESAS } from "../api/resas/apiRequest.ts";
+import { defineComponent } from "vue";
+import { createOptions, getPopulationYear } from "./displayGraph.ts";
 </script>
 
 <template>
-  <div id="graphDisplay">
-    <div id="container" style="width:100%; height:400px;"></div>
-  </div>
+    <div id="graphContainer" style="width:100%; height:400px;">
+      <highcharts class="chartContainer" :options="options.chartOptions"></highcharts>
+    </div>
 </template>
 
 <script lang="ts">
-// TODO: Space out the graph and selector
-// TODO: Load Selected prefecture to Highcharts
-// TODO: Cache already selected prefecture (if possible)
-document.addEventListener('DOMContentLoaded', function () {
-    const chart = Highcharts.chart('container', {
-        chart: {
-            type: "line"
+export default defineComponent({
+    props: ["selectedPrefecture"],
+    data() {
+      const options = createOptions();
+
+      return {
+        options
+      };
+    },
+    watch: {
+      selectedPrefecture: {
+        handler: async function(newPref, oldPref) {
+          let vm = this.options;
+          if(newPref.selected) {
+            console.log("add ", newPref.prefName);
+            const {year: years, population: populations}: {years: number[], populations: number[]} = await getPopulationYear(newPref);
+            vm.chartOptions.series.push({name: newPref.prefName, data: populations});
+            vm.chartOptions.xAxis.categories = years;
+          } else {
+            console.log("remove ", newPref.prefName);
+            const idx = vm.chartOptions.series.indexOf(newPref.prefName);
+            vm.chartOptions.series.splice(idx, 1);
+          }
         },
-        title: {
-            text: "都道府県別総人口推移グラフ"
-        },
-        xAxis: {
-            title: {
-              text: "年"
-            }
-        },
-        yAxis: {
-            title: {
-                text: '人口'
-            }
-        },
-        series: [{
-            name: 'Jane',
-            data: [1, 0, 4]
-        }, {
-            name: 'John',
-            data: [5, 7, 3]
-        }],
-        accessibility: {
-          enabled: false
-        },
-    });
+        deep: true
+      }
+    }
 });
 </script>
 
 <style>
 #graphDisplay h1 {
-  text-align: center;
-  margin: 1em;
+    text-align: center;
+    margin: 1em;
+}
+
+.chartContainer {
+  overflow: visible !important;
 }
 </style>

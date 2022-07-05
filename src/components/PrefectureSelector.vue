@@ -1,22 +1,45 @@
 <script setup lang="ts">
-import { RESAS } from "../api/resas/apiRequest.ts";
-import type { Prefecture } from "../api/Types.ts";
+import { defineComponent } from "vue";
+import { Prefecture } from "@/Types.ts";
+import { displayPrefectures } from "./displayPrefectures.ts";
 </script>
 
 <template>
+    <section @.once="hasStarted()">
+        <div id="prefectureContainer"></div>
+    </section>
 </template>
 
 <script lang="ts">
+export default defineComponent({
+    emits: ["selectedPrefecture"],
+    data: () => {
+        return {
+            prefectures: [] as Prefecture[],
+        }
+    },
+    methods: {
+        async hasStarted() {
+            this.prefectures = await displayPrefectures();
+
+            const checkboxQuery = document.querySelectorAll("input[type='checkbox']");
+            for(let i = 0; i < checkboxQuery.length; i++) {
+                checkboxQuery[i].addEventListener("change", (event) => {
+                    const idx = event.target.id - 1;
+                    const checkedPrefecture: Prefecture = this.prefectures[idx];
+
+                    this.prefectures[idx].selected = !this.prefectures[idx].selected;
+                    this.$emit("selectedPrefecture", checkedPrefecture);
+                })
+            }
+        },
+    },
+});
 </script>
 
 <style>
-#prefectureDisplay {
-    margin-bottom: 100px;
-}
-
-
 @media screen and (max-width: 1023px) {
-    #container {
+    #prefectureContainer {
         margin: auto;
 
         display: grid;
@@ -26,7 +49,7 @@ import type { Prefecture } from "../api/Types.ts";
 }
 
 @media screen and (min-width: 1024px) and (max-width: 1440px) {
-    #container {
+    #prefectureContainer {
         margin: auto;
 
         display: grid;
@@ -38,7 +61,7 @@ import type { Prefecture } from "../api/Types.ts";
 }
 
 @media screen and (min-width: 2560) {
-    #container {
+    #prefectureContainer {
         margin: auto;
 
         display: grid;
@@ -52,5 +75,4 @@ import type { Prefecture } from "../api/Types.ts";
 .prefecture input {
     margin-left: 5px;
 }
-
 </style>

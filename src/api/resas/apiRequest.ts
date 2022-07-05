@@ -1,26 +1,14 @@
 import axios from "axios";
-import type { Prefecture, PrefectureChecker, PopulationByYear } from "@/Types.ts";
-import type {  } from "@/Types";
+import type { Prefecture, PopulationByYear } from "@/Types.ts";
 
-const API_ENDPOINT = "https://opendata.resas-portal.go.jp";
-
-type PrefectureResponse = {
-  result: Prefecture[];
-};
-
-type PrefectureCheckerResponse = {
-  result: PrefectureChecker[];
-}
-
-type PopulationResponse = {
-  result: PopulationByYear[];
-};
+const API_ENDPOINT: string = "https://opendata.resas-portal.go.jp";
 
 export class RESAS {
-  private API_KEY = "pYWuiNRgMhLAOYRHevh3vHkDrn0opRsYMrfWu3ZO";
+  // how can i hide this
+  private API_KEY: string = "pYWuiNRgMhLAOYRHevh3vHkDrn0opRsYMrfWu3ZO";
 
-  public async getPrefecture(needsChecker?: boolean=false) {
-    let json: PrefectureResponse | PrefectureCheckerResponse;
+  public async getPrefecture() {
+    let json: Prefecture[];
     await axios
       .get(`${API_ENDPOINT}/api/v1/prefectures`, {
         method: "GET",
@@ -38,20 +26,16 @@ export class RESAS {
         console.error(error);
       });
 
-    if(needsChecker) {
-      for(let i = 0; i < json.length; i++) {
-            json[i].selected = false;
-      }
-      return json;
-    } else {
-      return json;
+    for(let i = 0; i < json.length; i++) {
+      json[i].selected = false;
     }
+    return json;
   }
 
-  public async getPopulation(prefCode: number) {
-    let json;
+  public async getPopulation(prefecture: Prefecture) {
+    let json: Population[];
     const params = new URLSearchParams({
-      prefCode: String(prefCode),
+      prefCode: String(prefecture.prefCode),
       cityCode: "-",
     }).toString();
 
@@ -65,7 +49,7 @@ export class RESAS {
         responseType: "json",
       })
       .then(async (response) => {
-        json = response.data.result.data[0].data as PopulationResponse;
+        json = response.data.result.data[0].data as Population[];
       })
       .catch(async (error) => {
         // TODO: better error handling
