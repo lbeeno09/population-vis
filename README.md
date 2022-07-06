@@ -21,6 +21,10 @@ If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has a
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
 
+npm version: 8.1.0
+
+node version: 17.0.1
+
 ## Project Setup
 
 ```sh
@@ -39,23 +43,16 @@ npm run dev
 npm run build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-# Probably delete layter
-
-```sh
-npm run test:unit
-```
-
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
-# probably delete later
-
-```sh
-npm run build
-npm run test:e2e # or `npm run test:e2e:ci` for headless testing
-```
+## husky and lint-staged are used to run Pretteir pre-commit to git
 
 ### Lint with [ESLint](https://eslint.org/)
 
 ```sh
 npm run lint
+```
+
+### Format files with [Prettier](https://prettier.io)
+
+```sh
+npm run prettier
 ```

@@ -9,11 +9,7 @@ export type PopulationByYear = {
   value: number;
 };
 
-export type Dates = {
-  year: number
-};
-
-export type PopulationOfPrefecture = {
-  prefName: string
-  value: number[];
+export type PopulationAndYear = {
+  years: number[];
+  values: number[];
 };

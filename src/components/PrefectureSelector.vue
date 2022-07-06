@@ -1,75 +1,94 @@
 <script setup lang="ts">
 import { defineComponent } from "vue";
 import { Prefecture } from "@/Types.ts";
-import { displayPrefectures } from "./displayPrefectures.ts";
+import { displayPrefectures } from "@/components/methods/displayPrefectures.ts";
 </script>
 
 <template>
-    <section @.once="hasStarted()">
-        <div id="prefectureContainer"></div>
-    </section>
+    <h2 id="prefecture_title">都道府県</h2>
+    <!-- <div id="prefecture_container" v-bind="hasStarted()"></div> -->
+    <div id="prefecture_container"></div>
+
 </template>
 
 <script lang="ts">
 export default defineComponent({
-    emits: ["selectedPrefecture"],
-    data: () => {
-        return {
-            prefectures: [] as Prefecture[],
-        }
-    },
-    methods: {
-        async hasStarted() {
-            this.prefectures = await displayPrefectures();
+  emits: ["selectedPrefecture"],
+  data: () => {
+    return {
+      prefectures: [] as Prefecture[],
+    };
+  },
+  async mounted() {
+      this.prefectures = await displayPrefectures();
 
-            const checkboxQuery = document.querySelectorAll("input[type='checkbox']");
-            for(let i = 0; i < checkboxQuery.length; i++) {
-                checkboxQuery[i].addEventListener("change", (event) => {
-                    const idx = event.target.id - 1;
-                    const checkedPrefecture: Prefecture = this.prefectures[idx];
+      const checkboxQuery = document.querySelectorAll("input[type='checkbox']");
+      for (let i = 0; i < checkboxQuery.length; i++) {
+          checkboxQuery[i].addEventListener("change", (event) => {
+            const idx: number = event.target.id - 1;
+            const checkedPrefecture: Prefecture = this.prefectures[idx];
 
-                    this.prefectures[idx].selected = !this.prefectures[idx].selected;
-                    this.$emit("selectedPrefecture", checkedPrefecture);
-                })
-            }
-        },
-    },
+            this.prefectures[idx].selected = !this.prefectures[idx].selected;
+            this.$emit("selectedPrefecture", checkedPrefecture);
+          });
+      }
+  }
 });
 </script>
 
-<style>
-@media screen and (max-width: 1023px) {
-    #prefectureContainer {
-        margin: auto;
+<style scoped>
+label, input[type="checkbox"] {
+  cursor: pointer;
+}
 
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-        grid-gap: 5px;
-    }
+input[type="checkbox"] {
+  -webkit-transform: scale(auto);
+}
+
+@media screen and (max-width: 1023px) {
+  #prefecture_container {
+    margin: auto;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-gap: 5px;
+  }
 }
 
 @media screen and (min-width: 1024px) and (max-width: 1440px) {
-    #prefectureContainer {
-        margin: auto;
+  #prefecture_container {
+    margin: auto;
 
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-        grid-gap: 5px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-gap: 5px;
 
-        font-size: 2.8vh;
-    }
+    font-size: 2.8vh;
+  }
 }
 
-@media screen and (min-width: 2560) {
-    #prefectureContainer {
-        margin: auto;
+@media screen and (min-width: 1441px) and (max-width: 2559px) {
+  #prefecture_container {
+    margin: auto;
 
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-        grid-gap: 5px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-gap: 5px;
 
-        font-size: 3.5vh;
-    }
+    font-size: 3.5vh;
+  }
+}
+
+@media screen and (min-width: 2560px) {
+  #prefecture_container {
+    margin: auto;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-gap: 5px;
+
+    font-size: 3vh;
+  }
 }
 
 .prefecture input {
