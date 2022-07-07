@@ -8,8 +8,8 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format-check": "npx prettier . --check",
-    "format": "npx prettier . --write",
+    "format-check": "npx prettier --check **/*.{ts,js,json,md,html,css,vue}",
+    "format": "npx prettier --write **/*.{ts,js,json,md,html,css,vue}",
     "prepare": "husky install",
     "lint-staged": "lint-staged"
   },

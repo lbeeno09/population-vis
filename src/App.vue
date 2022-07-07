@@ -11,13 +11,9 @@ import { RouterView } from "vue-router";
 <style>
 @import "@/assets/base.css";
 
-html {
-    font-size: calc(15px + 0.390625vw);
-}
- 
+/* mobile~ */ 
 #app {
     margin: auto;
-
     font-weight: normal;
 }
 
@@ -26,27 +22,66 @@ body {
 }
 
 h1 {
-  text-align: center;
-  font-size: 1.8rem;
+    font-size: 5vw;
 }
 
 h2 {
-    font-size: 1.5rem;
+    font-size: 4.5vw;
+    font-weight: bold;
 }
 
+h3 {
+    font-size: 1.8vw;
+}
 
+button {
+    width: 40vw;
+    height: 7vw;
+    font-size: 3.5vw;
+}
 
-/* @media (min-width: 1024px) {
-    body {
-        display: flex;
-        place-items: center;
+/* table~ */
+@media screen and (min-width: 426px) {
+    h1 {
+        font-size: 4vw;
     }
 
-    #app {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        padding: 0 2rem;
-        margin: auto;
+    h2 {
+        font-size: 3.5vw;
     }
-} */
+
+    button {
+        height: 6vw;
+    }
+}
+
+/* laptop~ */
+@media screen and (min-width: 769px) {
+    h1 {
+        font-size: 3.5vw;
+    }
+
+    h2 {
+        font-size: 3vw;
+    }
+
+    button {
+        height: 5.5vw;
+    }
+}
+
+/* 4K~ */
+@media screen and (min-width: 1441px) {
+    h1 {
+        font-size: 2.5vw;
+    }
+    
+    h2 {
+        font-size: 2vw;
+    }
+
+    button {
+        height: 4.5vw;
+    }
+}
 </style>
