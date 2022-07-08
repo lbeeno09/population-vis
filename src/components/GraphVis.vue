@@ -2,7 +2,7 @@
 import { defineComponent } from "vue";
 import type { Prefecture, PopulationAndYear, PopulationResponse } from "@/Types.ts";
 import { loadPopulation } from "@/api/apiRequest.ts";
-import { createOptions } from "@/components/methods/displayGraph.ts";
+import { createOptions } from "@/components/methods/GraphVisMethods.ts";
 </script>
 
 <template>
@@ -14,6 +14,7 @@ import { createOptions } from "@/components/methods/displayGraph.ts";
 
 <script lang="ts">
 export default defineComponent({
+    // which prefecture to (add/delete) from graph
     props: ["selectedPrefecture"],
     data() {
         const options = createOptions();
@@ -28,7 +29,7 @@ export default defineComponent({
                 const vm = this.options;
                 if (newPref.selected) {
                     const result: PopulationResponse = await loadPopulation(newPref);
-                    const {years: years, values: populations,}: PopulationAndYear
+                    const {years: years, values: populations}: PopulationAndYear
                         = result.data;
                     vm.chartOptions.series.push({
                         name: newPref.prefName,
@@ -40,9 +41,9 @@ export default defineComponent({
                     vm.chartOptions.series.splice(idx, 1);
                 }
             },
-          deep: true,
-        },
-    },
+            deep: true
+        }
+    }
 });
 </script>
 

@@ -6,7 +6,7 @@ export type Prefecture = {
 
 export type PrefectureResponse = {
     data: Prefecture[];
-    statusCode: string | undefined | boolean;
+    status: string | undefined | boolean;
 };
 
 export type PopulationByYear = {
@@ -21,5 +21,5 @@ export type PopulationAndYear = {
 
 export type PopulationResponse = {
     data: PopulationByYear[] | PopulationAndYear;
-    statusCode: string;
+    status: string | boolean;
 };

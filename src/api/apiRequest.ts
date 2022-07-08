@@ -1,19 +1,46 @@
 import axios from "axios";
-import "@/Types.ts";
-import type { PopulationByYear, PopulationResponse, PrefectureResponse } from "@/Types";
+import type { Prefecture, PrefectureResponse, PopulationByYear, PopulationAndYear, PopulationResponse } from "@/Types.ts";
 
 class RESAS {
+    /* Class to retrieve prefectures and population of prefectures
+    Methods:
+        getPrefecture: () => PrefectureResponse
+            returns:
+                1. array of objects with:
+                    a. prefecture code as prefCode: number
+                    b. prefecture name as prefName: string
+                    c. flag if it is selected: boolean
+                2 status code as status: string | undefined | boolean
+        getPopulation: Prefecture => Population
+            returns an:
+                1. (array of) object(s) with:
+                    a. a year and a value as an object as each element
+                    or
+                    b. object with arrays of years and values of each year
+                2. status code as status: string
+    Attributes:
+        errorCodes: object
+            pairs of status code and what they mean
+        API_ENDPOINT: string
+            url of the API
+        API_KEY: string
+            access key for getting the API data
+            access key will be stored in .env.local file
+    */
     private errorCodes: object = {
         "400": "Bad Request",
         "403": "Forbidden",
         "404": "Not Found",
         "429": "Too Many Requests"
     };
-    private API_ENDPOINT = "https://opendata.resas-portal.go.jp";
-    private API_KEY = "pYWuiNRgMhLAOYRHevh3vHkDrn0opRsYMrfWu3ZO";
+    private  API_ENDPOINT = "https://opendata.resas-portal.go.jp";
+    private API_KEY = import.meta.env.VITE_API_KEY;
 
-    public async getPrefecture(): PrefectureResponse {
-        const result: PrefectureResponse = {};
+    public async getPrefecture(): Promise<PrefectureResponse> {
+        const result: PrefectureResponse = {
+            data: [] as Prefecture[],
+            status: ""
+        };
       
         await axios.get(`${this.API_ENDPOINT}/api/v1/prefectures`, {
             method: "GET",
@@ -25,31 +52,31 @@ class RESAS {
         })
         .then(async (response) => {
             result.data = response.data.result as Prefecture[];
-            result.statusCode = response.data.statusCode;
+            result.status = response.data.statusCode as string;
         })
         .catch((error) => {
             console.error(error);
-            result.data = {} as Prefecture[];
-            result.statusCode = "400";
+            result.data = [] as Prefecture[];
+            result.status = "400";
         });
         
-        if(result.statusCode === undefined) {
+        if(result.status === undefined) {
             for(let i = 0; i < result.data.length; i++) {
                 result.data[i].selected = false;
             }
-            result.statusCode = "200";
-
-            return result;
+            result.status = "200";
         } else {
-            console.error("statusCode:", result.statusCode, this.errorCodes[result.statusCode]);
-
-            return result;
+            console.error("statusCode:", result.status, this.errorCodes[result.status as string]);
         }
+
+        return result;
     }
 
-    public async getPopulation(prefecture: Prefecture): PopulationResponse {
-        const result: PopulationResponse = {}
-        let json: PopulationByYear[], responseCode: string;
+    public async getPopulation(prefecture: Prefecture): Promise<PopulationResponse> {
+        const result: PopulationResponse = {
+            data: [] as PopulationByYear[],
+            status: ""
+        };
         const params = new URLSearchParams({
             prefCode: String(prefecture.prefCode),
             cityCode: "-",
@@ -65,43 +92,44 @@ class RESAS {
         })
         .then(async (response) => {
             result.data = response.data.result.data[0].data as PopulationByYear[];
-            result.statusCode = response.data.statusCode;
+            result.status = response.data.statusCode as string;
         })
         .catch((error) => {
-            result.data = {} as PopulationByYear[];
-            result.statusCode = "400";
+            console.error(error);
+            result.data = [] as PopulationByYear[];
+            result.status = "400";
         });
 
-        if(result.statusCode === undefined) {
+        if(result.status === undefined) {
             for(let i = 0; i < result.data.length; i++) {
                 result.data[i].selected = false;
             }
-    
-            return result;
         } else {
-            console.error("statusCode: ", result.statusCode, this.errorCodes[result.responseCode]);
-
-            return result;
+            console.error("statusCode: ", result.status, this.errorCodes[result.status]);
         }
+
+        return result;
     }
 };
 
-export const loadPrefectures = async (): PrefectureResponse => {
+export const loadPrefectures = async (): Promise<PrefectureResponse> => {
+    // acquire prefecture data and the flag if we properly got it
     const api: RESAS = new RESAS();
-    const {data: pref, statusCode: status}: PrefectureResponse = await api.getPrefecture();
+    const {data: pref, status: statusCode}: PrefectureResponse = await api.getPrefecture();
 
-    return { data: pref, statusCode: status === "200" };
+    return { data: pref, status: (statusCode === "200") as boolean };
 };
 
-export const loadPopulation = async (prefecture: Prefecture): PopulationResponse => {
+export const loadPopulation = async (prefecture: Prefecture): Promise<PopulationResponse> => {
+    // acuire population data of a specified prefecture and the flag if we properly got it
     const api: RESAS = new RESAS();
-    const {data: popByYear, statusCode: status}: PopulationResponse = await api.getPopulation(prefecture);
+    const {data: popByYear, status: statusCode}: PopulationResponse = await api.getPopulation(prefecture);
 
-    const popAndYear: PopulationAndYear = { years: [], values: []}
+    const popAndYear: PopulationAndYear = {years: [], values: []}
     for (let i = 0; i < popByYear.length; i++) {
         popAndYear.years.push(popByYear[i].year);
         popAndYear.values.push(popByYear[i].value);
     }
 
-    return { data: popAndYear, statusCode: status === "200" } as PopulationResponse;
+    return { data: popAndYear, status: (statusCode === "200") as boolean };
 };

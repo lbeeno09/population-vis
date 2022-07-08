@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineComponent } from "vue";
-import { Prefecture } from "@/Types.ts";
+import type { Prefecture } from "@/Types.ts";
 import StartPage from "@/components/StartPage.vue";
 import PrefectureSelector from "@/components/PrefectureSelector.vue";
 import GraphVis from "@/components/GraphVis.vue";
@@ -10,10 +10,10 @@ import GraphVis from "@/components/GraphVis.vue";
     <header class="page-header">
         <h1 id="page_title">都道府県別人口推移グラフ</h1>
     </header>
-    <div id="start_page" v-if="isSplashScreen(screenName) && isGoodResponse">
-        <StartPage @nextPage="toNextPage" />
+    <div id="start_page" v-if="isFirstPage">
+        <StartPage @isFirstPage="toNextPage" />
     </div>
-    <div id="main_page" v-if="!isSplashScreen(screenName) && isGoodResponse">
+    <div id="main_page" v-if="!isFirstPage && isGoodResponse">
         <div id="prefecture_select">
             <PrefectureSelector @isGoodResponse="storeResponseResult" @selectedPrefecture="storeTickedPrefecture" />
         </div>
@@ -32,17 +32,14 @@ import GraphVis from "@/components/GraphVis.vue";
 export default defineComponent({
     data() {
         return {
-            screenName: "firstPage" as string,
-            tickedPrefecture: {} as Prefecture,
-            isGoodResponse: true
+            isFirstPage: true, // is it the first page?
+            tickedPrefecture: {} as Prefecture, // which prefecture was selected
+            isGoodResponse: true, // did the API response good?
         };
     },
     methods: {
-        isSplashScreen(name: string) {
-            return name === "firstPage";
-        },
-        toNextPage(page: string) {
-            this.screenName = page;
+        toNextPage(flg: boolean) {
+            this.isFirstPage = flg;
         },
         storeTickedPrefecture(p: Prefecture) {
             this.tickedPrefecture = p;
@@ -54,8 +51,8 @@ export default defineComponent({
     components: {
         StartPage,
         PrefectureSelector,
-        GraphVis,
-    },
+        GraphVis
+    }
 });
 </script>
 

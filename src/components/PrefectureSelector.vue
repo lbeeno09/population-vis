@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineComponent } from "vue";
 import type { Prefecture, PrefectureResponse } from "@/Types.ts";
-import { displayPrefectures } from "@/components/methods/displayPrefectures.ts";
+import { displayPrefectures } from "@/components/methods/PrefectureSelectorMethods.ts";
 </script>
 
 <template>
@@ -13,6 +13,11 @@ import { displayPrefectures } from "@/components/methods/displayPrefectures.ts";
 
 <script lang="ts">
 export default defineComponent({
+    // send to MainView
+    // selectedPrefecture: Prefecture
+    //    which prefecture is selected
+    // isGoodResponse: boolean
+    //    if the API properly returned
     emits: ["selectedPrefecture", "isGoodResponse"],
     data: () => {
         return {
@@ -23,8 +28,7 @@ export default defineComponent({
     async mounted() {
         const result: PrefectureResponse = await displayPrefectures();
         this.prefectures = result.data;
-        this.isGoodResponse = result.statusCode;
-        let vm = this;
+        this.isGoodResponse = result.status;
 
         if(this.isGoodResponse) {
             const checkboxQuery = document.querySelectorAll("input[type='checkbox']");
@@ -33,14 +37,14 @@ export default defineComponent({
                     const idx: number = event.target.id - 1;
                     const checkedPrefecture: Prefecture = this.prefectures[idx];
 
-                    vm.prefectures[idx].selected = !this.prefectures[idx].selected;
-                    vm.$emit("selectedPrefecture", checkedPrefecture);
+                    this.prefectures[idx].selected = !this.prefectures[idx].selected;
+                    this.$emit("selectedPrefecture", checkedPrefecture);
                 });
             }
         } else {
             this.$emit("isGoodResponse", this.isGoodResponse);    
         }
-    },
+    }
 });
 </script>
 
@@ -49,6 +53,20 @@ export default defineComponent({
 div#prefecture_container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+}
+
+h2#prefecture_title {
+    display: inline-block;
+}
+
+button#selection_clear {
+    display: inline-block;
+    width: 15vw;
+    height: 3vw;
+    font-size: 1.5vw;
+    margin-left: 1.5vw;
+
+    cursor: pointer;
 }
 
 input[type="checkbox"], label {
@@ -71,6 +89,10 @@ label {
 @media screen and (min-width: 769px) {
     input[type="checkbox"] {
         transform: scale(1.5);
+    }
+
+    button#selection_clear {
+        transform: scale(1);
     }
     
     label {

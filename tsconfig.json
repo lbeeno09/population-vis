@@ -1,4 +1,10 @@
 {
+	"compilerOptions": {
+		"lib": [
+			"es6",
+			"dom"
+		]
+	},
 	"files": [],
 	"references": [
 		{
@@ -7,5 +13,5 @@
 		{
 			"path": "./tsconfig.app.json"
 		}
-	]
+	],
 }

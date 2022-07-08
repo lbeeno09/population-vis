@@ -1,10 +1,11 @@
-import type { Prefecture, PrefectureResponse } from "@/Types";
+import type { PrefectureResponse } from "@/Types";
 import { loadPrefectures } from "@/api/apiRequest.ts";
 
-export const displayPrefectures = async (): Prefecture[] => {
+// returns data and add elements to HTML if data is properly acquired
+export const displayPrefectures = async (): PrefectureResponse => {
     const result: PrefectureResponse = await loadPrefectures();
 
-    if(result.statusCode) {
+    if(result.status) {
         for (let i = 0; i < result.data.length; i++) {
             const entry: HTMLDivElement = document.createElement("div");
             entry.classList.add("prefecture-list");

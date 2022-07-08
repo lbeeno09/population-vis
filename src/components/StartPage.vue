@@ -15,17 +15,19 @@
 
 <script lang="ts">
 export default {
-    emits: ["nextPage"],
+    // send to MainView
+    // send false if button pressed
+    emits: ["isFirstPage"],
     data() {
         return {
-            nextPage: "mainPage",
+            isFirstpage: false
         };
     },
     methods: {
         clicked() {
-            this.$emit("nextPage", this.nextPage);
-        },
-    },
+            this.$emit("isFirstPage", this.isFirstpage);
+        }
+    }
 };
 </script>
 

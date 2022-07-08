@@ -38,6 +38,11 @@ button {
     width: 40vw;
     height: 7vw;
     font-size: 3.5vw;
+    
+}
+
+input {
+    transition-delay: 78ms;
 }
 
 /* table~ */
