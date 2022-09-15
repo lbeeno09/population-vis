@@ -2,6 +2,7 @@
 
 ## Description
 A visualizer of the population of prefectures from year 1960 to 2045(estimated)
+This project was created as a part of a coding test and created in 10 days
 
 ## Prerequisites
 * npm: v8.1.0
